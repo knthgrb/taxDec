@@ -135,6 +135,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                       child: CustomTextFormField(
                         labelText: "Arp No.",
                         controller: widget.arpNo,
+                        isNumberField: false,
                       ),
                     ),
                   ],
@@ -154,6 +155,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                       child: CustomTextFormField(
                         labelText: "TIN",
                         controller: widget.ownerTinController,
+                        isNumberField: false,
                       ),
                     ),
                   ],
@@ -171,6 +173,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: false,
                         labelText: "Tel No.",
                         controller: widget.ownerTelNumberController,
                       ),
@@ -182,6 +185,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                   children: [
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: false,
                         labelText: "Administratot/Beneficial User",
                         controller: widget.beneficialUser,
                       ),
@@ -189,6 +193,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: false,
                         labelText: "TIN",
                         controller: widget.beneficialUserTin,
                       ),
@@ -200,6 +205,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                   children: [
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: false,
                         labelText: "Address",
                         controller: widget.beneficialUserAddress,
                       ),
@@ -207,6 +213,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: false,
                         labelText: "Tel No.",
                         controller: widget.beneficialUserTelNumber,
                       ),
@@ -236,6 +243,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                             CustomTextFormField(
                               labelText: "Street No.",
                               controller: widget.streeNumber,
+                              isNumberField: true,
                             ),
                           ]),
                     ),
@@ -258,6 +266,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                   children: [
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: true,
                         labelText: "Blk No.",
                         controller: widget.blkNumber,
                       ),
@@ -265,6 +274,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: true,
                         labelText: "OCT/TCT/CLOA No.",
                         controller: widget.octNumber,
                       ),
@@ -272,6 +282,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: true,
                         labelText: "Survey No.",
                         controller: widget.surveyNumber,
                       ),
@@ -283,6 +294,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                   children: [
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: true,
                         labelText: "CCT",
                         controller: widget.cctNumber,
                       ),
@@ -290,6 +302,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: true,
                         labelText: "Lot No.",
                         controller: widget.lotNumber,
                       ),
@@ -297,62 +310,10 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     const SizedBox(width: 20),
                     Expanded(
                       child: CustomTextFormField(
+                        isNumberField: false,
                         labelText: "Dated",
                         controller: widget.dated,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "BOUNDARIES",
-                      style: TextStyle(
-                          fontFamily: "Inter",
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextFormField(
-                            labelText: "North",
-                            controller: widget.northBoundary,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: CustomTextFormField(
-                            labelText: "South",
-                            controller: widget.southBoundary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextFormField(
-                            labelText: "East",
-                            controller: widget.eastBoundary,
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: CustomTextFormField(
-                            labelText: "West",
-                            controller: widget.westBoundary,
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
@@ -419,6 +380,13 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                       isNumberField: true,
                       labelText: "No. of Storeys (e.g. 1 or 2)",
                       controller: widget.numberOfStoreys),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextFormFieldWithValidator(
+                      isNumberField: false,
+                      labelText: "Brief Description",
+                      controller: widget.briefDescription)
                 ] else if (_selectedPropertyType == "Machinery") ...[
                   CustomTextFormFieldWithValidator(
                       isNumberField: false,
@@ -429,6 +397,63 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                       isNumberField: false,
                       labelText: "Specify",
                       controller: widget.specification)
+                ] else if (_selectedPropertyType == "Land") ...[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "BOUNDARIES",
+                        style: TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextFormField(
+                              isNumberField: false,
+                              labelText: "North",
+                              controller: widget.northBoundary,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: CustomTextFormField(
+                              isNumberField: false,
+                              labelText: "South",
+                              controller: widget.southBoundary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextFormField(
+                              isNumberField: false,
+                              labelText: "East",
+                              controller: widget.eastBoundary,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: CustomTextFormField(
+                              isNumberField: false,
+                              labelText: "West",
+                              controller: widget.westBoundary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ]
               ],
             ),

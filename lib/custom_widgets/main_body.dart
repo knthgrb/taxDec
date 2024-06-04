@@ -10,6 +10,8 @@ import 'package:tax/main.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/lucide.dart';
 import 'package:iconify_flutter/icons/ri.dart';
+import 'package:tax/services/pdf_format.dart';
+import 'package:tax/services/pdf_service.dart';
 import 'package:tax/utils/error_dialog.dart';
 import 'package:tax/utils/error_messages.dart';
 
@@ -127,7 +129,8 @@ class _MainBodyState extends State<MainBody> {
       'owner': _owner.text,
       'ownerTIN': _ownerTin.text.isNotEmpty ? _ownerTin.text : "",
       'ownerAddress': _ownerAddress.text,
-      'ownerTelNumber': _ownerTelNumber.text.isNotEmpty ? _ownerTelNumber : "",
+      'ownerTelNumber':
+          _ownerTelNumber.text.isNotEmpty ? _ownerTelNumber.text : "",
       'beneficialUser':
           _beneficialUser.text.isNotEmpty ? _beneficialUser.text : "",
       'beneficialTIN':
@@ -151,19 +154,20 @@ class _MainBodyState extends State<MainBody> {
       'blkNo': _blkNo.text.isNotEmpty ? int.parse(_blkNo.text) : null,
       'northBoundary':
           _northBoundary.text.isNotEmpty ? _northBoundary.text : "",
-      'southBoundary': _southBoundary.text.isNotEmpty ? _southBoundary : "",
+      'southBoundary':
+          _southBoundary.text.isNotEmpty ? _southBoundary.text : "",
       'eastBoundary': _eastBoundary.text.isNotEmpty ? _eastBoundary.text : "",
       'westBoundary': _westBoundary.text.isNotEmpty ? _westBoundary.text : "",
       'propertyType': _selectedPropertyType,
       'noOfStoreys':
           _noOfStoreys.text.isNotEmpty ? int.tryParse(_noOfStoreys.text) : null,
       'briefDescription':
-          _briefDescription.text.isEmpty ? _briefDescription.text : "",
+          _briefDescription.text.isNotEmpty ? _briefDescription.text : "",
       'specification': _specification.text.isNotEmpty ? _specification.text : ""
     };
 
     try {
-      await supabase.from('tax_declaration_data').insert([payload]).select();
+      await supabase.from('tax_declaration_data').insert(payload).select();
       Navigator.of(context).pop(); // Close the dialog
       _fetchData();
     } catch (error) {
@@ -203,7 +207,8 @@ class _MainBodyState extends State<MainBody> {
       'owner': _owner.text,
       'ownerTIN': _ownerTin.text.isNotEmpty ? _ownerTin.text : "",
       'ownerAddress': _ownerAddress.text,
-      'ownerTelNumber': _ownerTelNumber.text.isNotEmpty ? _ownerTelNumber : "",
+      'ownerTelNumber':
+          _ownerTelNumber.text.isNotEmpty ? _ownerTelNumber.text : "",
       'beneficialUser':
           _beneficialUser.text.isNotEmpty ? _beneficialUser.text : "",
       'beneficialTIN':
@@ -227,14 +232,15 @@ class _MainBodyState extends State<MainBody> {
       'blkNo': _blkNo.text.isNotEmpty ? int.parse(_blkNo.text) : null,
       'northBoundary':
           _northBoundary.text.isNotEmpty ? _northBoundary.text : "",
-      'southBoundary': _southBoundary.text.isNotEmpty ? _southBoundary : "",
+      'southBoundary':
+          _southBoundary.text.isNotEmpty ? _southBoundary.text : "",
       'eastBoundary': _eastBoundary.text.isNotEmpty ? _eastBoundary.text : "",
       'westBoundary': _westBoundary.text.isNotEmpty ? _westBoundary.text : "",
       'propertyType': _selectedPropertyType,
       'noOfStoreys':
           _noOfStoreys.text.isNotEmpty ? int.tryParse(_noOfStoreys.text) : null,
       'briefDescription':
-          _briefDescription.text.isEmpty ? _briefDescription.text : "",
+          _briefDescription.text.isNotEmpty ? _briefDescription.text : "",
       'specification': _specification.text.isNotEmpty ? _specification.text : ""
     };
 
@@ -245,19 +251,6 @@ class _MainBodyState extends State<MainBody> {
           .eq('id', id)
           .select();
       Navigator.of(context).pop(); // Close the dialog
-      _fetchData();
-    } catch (error) {
-      showErrorDialog(context, error.toString(), "Please try again.");
-      if (kDebugMode) {
-        print("error $error");
-      }
-    }
-  }
-
-  // Function to delete an item
-  Future<void> _deleteItem(id) async {
-    try {
-      await supabase.from('tax_declaration_data').delete().eq('id', id);
       _fetchData();
     } catch (error) {
       String errorMessage = "";
@@ -279,6 +272,19 @@ class _MainBodyState extends State<MainBody> {
         errorMessage = ErrorMessages.genericError;
       }
       showErrorDialog(context, errorMessage, subMessage);
+      if (kDebugMode) {
+        print("error $error");
+      }
+    }
+  }
+
+  // Function to delete an item
+  Future<void> _deleteItem(id) async {
+    try {
+      await supabase.from('tax_declaration_data').delete().eq('id', id);
+      _fetchData();
+    } catch (error) {
+      showErrorDialog(context, error.toString(), "Please try again.");
       if (kDebugMode) {
         print("error $error");
       }
@@ -397,12 +403,32 @@ class _MainBodyState extends State<MainBody> {
         selectedPropertyType: _selectedPropertyType,
         onSelectedPropertyType: (String? propertyType) {
           setState(() {
+            _noOfStoreys.clear();
+            _briefDescription.clear();
+            _specification.clear();
+            _northBoundary.clear();
+            _southBoundary.clear();
+            _eastBoundary.clear();
+            _westBoundary.clear();
             _selectedPropertyType = propertyType;
           });
         },
         onSubmit: () => _updateDataInDB(id),
       ),
     );
+  }
+
+  // FUNCTION TO GET DATA FROM DB THEN GENERATE PDF
+  Future<void> _getDataFromDBandGeneratePDF(int id) async {
+    final payload = await supabase
+        .from("tax_declaration_data")
+        .select()
+        .eq('id', id)
+        .single();
+
+    final pdfFile = await PdfGenerateForm.generate(payload);
+
+    PdfService.savePdfFile("test", pdfFile);
   }
 
   @override
@@ -626,13 +652,14 @@ class _MainBodyState extends State<MainBody> {
                                           MainAxisAlignment.center,
                                       children: [
                                         PopupMenuButton<String>(
-                                          onSelected: (String value) {
+                                          onSelected: (String value) async {
                                             switch (value) {
                                               case 'edit':
                                                 _showEditForm(item['id']);
                                                 break;
                                               case 'pdf':
-                                                // _viewInPDF(data);
+                                                _getDataFromDBandGeneratePDF(
+                                                    item['id']);
                                                 break;
                                               case 'delete':
                                                 showDialog(
@@ -682,7 +709,7 @@ class _MainBodyState extends State<MainBody> {
                                             ),
                                             const PopupMenuItem<String>(
                                               value: 'pdf',
-                                              child: Text('View in PDF'),
+                                              child: Text('View Details'),
                                             ),
                                             const PopupMenuItem<String>(
                                               value: 'delete',
