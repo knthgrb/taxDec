@@ -54,6 +54,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  inno_bundle: ^0.5.0
 
 
 
@@ -111,9 +112,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-flutter_launcher_icons:
-  image_path: "assets/images/logo.png"
-  windows:
-    generate: true
-    image_path: "assets/images/logo.png"
-    icon_size: 48
+inno_bundle:
+  id: d88accb0-8e52-100c-9906-f33ae06aeead
+  publisher: Kenneth Garbo
