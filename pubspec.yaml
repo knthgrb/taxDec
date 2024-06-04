@@ -115,3 +115,5 @@ flutter:
 inno_bundle:
   id: d88accb0-8e52-100c-9906-f33ae06aeead
   publisher: Kenneth Garbo
+  installer_icon: assets/images/app_icon.ico
+  name: taxDec
