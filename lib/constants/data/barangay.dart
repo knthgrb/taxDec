@@ -20,5 +20,5 @@ const List<Barangay> barangays = [
   Barangay(barangayName: "Talisay", id: 17),
   Barangay(barangayName: "Tapilon", id: 18),
   Barangay(barangayName: "Tinubdan", id: 19),
-  Barangay(barangayName: "Tominhao", id: 20),
+  Barangay(barangayName: "Tominjao", id: 20),
 ];
