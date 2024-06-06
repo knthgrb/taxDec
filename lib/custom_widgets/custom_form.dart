@@ -186,7 +186,7 @@ class _AddTaxDecDataFormState extends State<AddTaxDecDataForm> {
                     Expanded(
                       child: CustomTextFormField(
                         isNumberField: false,
-                        labelText: "Administratot/Beneficial User",
+                        labelText: "Administrator/Beneficial User",
                         controller: widget.beneficialUser,
                       ),
                     ),
